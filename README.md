@@ -53,7 +53,7 @@ Portable exe file in setup folder
 
 ## Collection
 - [XO](https://github.com/BHA-Bilel/JavaFX-XO)
-- [Checkers]((https://github.com/BHA-Bilel/JavaFX-CHECKERS))
+- [Checkers](https://github.com/BHA-Bilel/JavaFX-CHECKERS)
 - Chess (current)
 - [Connect4](https://github.com/BHA-Bilel/JavaFX-CONNECT4)
 - [Dominoes](https://github.com/BHA-Bilel/JavaFX-DOMINOS)
