@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import bg.chess.lang.Language;
+import bg.chess.popup.MyAlert;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -18,70 +20,102 @@ public class GameApp extends GridPane {
     private int playerID;
     private final GameClient gameClient;
 
-    public static final double TILE_SIZE = 100;
-    public static final int WIDTH = 8;
-    public static final int HEIGHT = 8;
-
     List<Tile> NormalMoves = new ArrayList<>();
     List<Tile> AttackMoves = new ArrayList<>();
-    private final Tile[][] board = new Tile[WIDTH][HEIGHT];
-    private final Handler handler;
+    private final Tile[][] board = new Tile[8][8];
     private boolean yourTurn, playable = false;
     private Tile selectedTile;
     private final String yourName, opName;
     public int parties_won, parties_lost;
+    private MyAlert results_alert;
 
     public GameApp(Socket gameSocket, String name, String opName) {
         this.yourName = name;
         this.opName = opName;
         gameClient = new GameClient(gameSocket);
         gameClient.handShake();
-        handler = new Handler(this);
-//        setPrefSize(WIDTH * TILE_SIZE, HEIGHT * TILE_SIZE);
         setAlignment(Pos.CENTER);
-        getChildren().clear();
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WIDTH; x++) {
-                Tile tile = new Tile(handler, (x + y) % 2 == 0, x, y);
+        createGUI();
+    }
+
+    private void createGUI() {
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                Tile tile = new Tile(this, (x + y) % 2 == 0, x, y);
                 GridPane.setHalignment(tile, HPos.CENTER);
+                GridPane.setFillHeight(tile, true);
                 add(tile, x, y);
-                board[x][y] = null;
                 board[x][y] = tile;
-
                 Piece piece = null;
-
-                if (y == 0) {
-                    if (x == 0 || x == 7) {
-                        piece = new Piece(PieceType.Rook, PieceColor.BLACK, x, y);
-                    } else if (x == 1 || x == 6) {
-                        piece = new Piece(PieceType.Knight, PieceColor.BLACK, x, y);
-                    } else if (x == 2 || x == 5) {
-                        piece = new Piece(PieceType.Bishop, PieceColor.BLACK, x, y);
-                    } else if (x == 3) {
-                        piece = new Piece(PieceType.Queen, PieceColor.BLACK, x, y);
-                    } else {
-                        piece = new Piece(PieceType.King, PieceColor.BLACK, x, y);
+                switch (y) {
+                    case 0: {
+                        switch (x) {
+                            case 0:
+                            case 7: {
+                                piece = new Piece(PieceType.Rook, PieceColor.BLACK, x, y);
+                                break;
+                            }
+                            case 1:
+                            case 6: {
+                                piece = new Piece(PieceType.Knight, PieceColor.BLACK, x, y);
+                                break;
+                            }
+                            case 2:
+                            case 5: {
+                                piece = new Piece(PieceType.Bishop, PieceColor.BLACK, x, y);
+                                break;
+                            }
+                            case 3: {
+                                piece = new Piece(PieceType.Queen, PieceColor.BLACK, x, y);
+                                break;
+                            }
+                            default: {
+                                piece = new Piece(PieceType.King, PieceColor.BLACK, x, y);
+                                break;
+                            }
+                        }
+                        break;
                     }
-                } else if (y == 7) {
-                    if (x == 0 || x == 7) {
-                        piece = new Piece(PieceType.Rook, PieceColor.WHITE, x, y);
-                    } else if (x == 1 || x == 6) {
-                        piece = new Piece(PieceType.Knight, PieceColor.WHITE, x, y);
-                    } else if (x == 2 || x == 5) {
-                        piece = new Piece(PieceType.Bishop, PieceColor.WHITE, x, y);
-                    } else if (x == 3) {
-                        piece = new Piece(PieceType.Queen, PieceColor.WHITE, x, y);
-                    } else {
-                        piece = new Piece(PieceType.King, PieceColor.WHITE, x, y);
+                    case 1: {
+                        piece = new Piece(PieceType.Pawn, PieceColor.BLACK, x, y);
+                        break;
                     }
-                } else if (y == 1) {
-                    piece = new Piece(PieceType.Pawn, PieceColor.BLACK, x, y);
-                } else if (y == 6) {
-                    piece = new Piece(PieceType.Pawn, PieceColor.WHITE, x, y);
+                    case 6: {
+                        piece = new Piece(PieceType.Pawn, PieceColor.WHITE, x, y);
+                        break;
+                    }
+                    case 7: {
+                        switch (x) {
+                            case 0:
+                            case 7: {
+                                piece = new Piece(PieceType.Rook, PieceColor.WHITE, x, y);
+                                break;
+                            }
+                            case 1:
+                            case 6: {
+                                piece = new Piece(PieceType.Knight, PieceColor.WHITE, x, y);
+                                break;
+                            }
+                            case 2:
+                            case 5: {
+                                piece = new Piece(PieceType.Bishop, PieceColor.WHITE, x, y);
+                                break;
+                            }
+                            case 3: {
+                                piece = new Piece(PieceType.Queen, PieceColor.WHITE, x, y);
+                                break;
+                            }
+                            default: {
+                                piece = new Piece(PieceType.King, PieceColor.WHITE, x, y);
+                                break;
+                            }
+                        }
+                        break;
+                    }
                 }
-
                 if (piece != null) {
                     tile.setPiece(piece);
+                    tile.setup_defaults();
                 }
             }
         }
@@ -107,10 +141,10 @@ public class GameApp extends GridPane {
                 }
             }
             x++;
-            if (x == WIDTH) {
+            if (x == 8) {
                 x = 0;
                 y++;
-                if (y == HEIGHT) {
+                if (y == 8) {
                     complete = true;
                 }
             }
@@ -129,57 +163,16 @@ public class GameApp extends GridPane {
         }
         if (!playable) {
             startNewGame(youWon);
-            showResults();
+            showResults(false);
         }
         return playable;
     }
 
     private void startNewGame(boolean youWon) {
         Platform.runLater(() -> {
-            getChildren().clear();
-            for (int y = 0; y < HEIGHT; y++) {
-                for (int x = 0; x < WIDTH; x++) {
-                    Tile tile = new Tile(handler, (x + y) % 2 == 0, x, y);
-                    GridPane.setHalignment(tile, HPos.CENTER);
-                    add(tile, x, y);
-                    board[x][y] = null;
-                    board[x][y] = tile;
-
-                    Piece piece = null;
-
-                    if (y == 0) {
-                        if (x == 0 || x == 7) {
-                            piece = new Piece(PieceType.Rook, PieceColor.BLACK, x, y);
-                        } else if (x == 1 || x == 6) {
-                            piece = new Piece(PieceType.Knight, PieceColor.BLACK, x, y);
-                        } else if (x == 2 || x == 5) {
-                            piece = new Piece(PieceType.Bishop, PieceColor.BLACK, x, y);
-                        } else if (x == 3) {
-                            piece = new Piece(PieceType.Queen, PieceColor.BLACK, x, y);
-                        } else {
-                            piece = new Piece(PieceType.King, PieceColor.BLACK, x, y);
-                        }
-                    } else if (y == 7) {
-                        if (x == 0 || x == 7) {
-                            piece = new Piece(PieceType.Rook, PieceColor.WHITE, x, y);
-                        } else if (x == 1 || x == 6) {
-                            piece = new Piece(PieceType.Knight, PieceColor.WHITE, x, y);
-                        } else if (x == 2 || x == 5) {
-                            piece = new Piece(PieceType.Bishop, PieceColor.WHITE, x, y);
-                        } else if (x == 3) {
-                            piece = new Piece(PieceType.Queen, PieceColor.WHITE, x, y);
-                        } else {
-                            piece = new Piece(PieceType.King, PieceColor.WHITE, x, y);
-                        }
-                    } else if (y == 1) {
-                        piece = new Piece(PieceType.Pawn, PieceColor.BLACK, x, y);
-                    } else if (y == 6) {
-                        piece = new Piece(PieceType.Pawn, PieceColor.WHITE, x, y);
-                    }
-
-                    if (piece != null) {
-                        tile.setPiece(piece);
-                    }
+            for (Tile[] tiles : board) {
+                for (Tile tile : tiles) {
+                    tile.reset();
                 }
             }
             if (!youWon) {
@@ -200,7 +193,6 @@ public class GameApp extends GridPane {
             int toY = (int) coor[3];
             boolean isAttackMove = (boolean) coor[4];
             Platform.runLater(() -> board[pieceX][pieceY].play(selectedPiece, toX, toY, isAttackMove));
-
         });
         t.start();
     }
@@ -210,15 +202,16 @@ public class GameApp extends GridPane {
         Platform.runLater(() -> getChildren().clear());
     }
 
-    public void showResults() {
+    public void showResults(boolean shortcut) {
+        if (results_alert != null && results_alert.isShowing())
+            if (shortcut) return;
+            else results_alert.close();
         Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Game");
-            alert.setHeaderText("Results");
             String text = yourName + " : " + parties_won + "\n";
             text += opName + " : " + parties_lost + "\n";
-            alert.setContentText(text);
-            alert.show();
+            if (results_alert == null) results_alert = new MyAlert(Alert.AlertType.INFORMATION, Language.GR_H, text);
+            else results_alert.update(text);
+            results_alert.show();
         });
     }
 

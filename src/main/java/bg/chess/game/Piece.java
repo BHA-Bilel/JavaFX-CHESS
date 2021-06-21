@@ -1,7 +1,8 @@
 package bg.chess.game;
 
+import bg.chess.MainApp;
+import javafx.beans.binding.Bindings;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class Piece extends StackPane {
@@ -17,8 +18,7 @@ public class Piece extends StackPane {
         this.x = x;
         this.y = y;
         text = new Text();
-        text.setFont(Font.font(50));
-
+        text.styleProperty().bind(Bindings.concat("-fx-font-size: ", MainApp.fontProperty.multiply(3).asString()));
         text.setText(type.toString());
         if (type == PieceType.Pawn) {
             if (color == PieceColor.WHITE)
@@ -52,12 +52,8 @@ public class Piece extends StackPane {
             else
                 text.setText("\u265A");
         }
-
         getChildren().addAll(text);
-
     }
-
-    // GETTERS SETTERS
 
     public int getX() {
         return x;
