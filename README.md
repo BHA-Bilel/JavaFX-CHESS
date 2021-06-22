@@ -1,8 +1,9 @@
-# JavaFX-CHESS 🕹️
+# JavaFX-CHESS 🕹️ - version 1.0
+<p align="left"> <img src="https://komarev.com/ghpvc/?username=bha-bilel&label=Project%20views&color=0e75b6&style=plastic" alt="bha-bilel" /> </p>
 
-> Play Chess with your friends online!
+> Play Chess with your friends!
 > 
-> Jump to the [Setup](#setup) section to to download the game, enjoy!
+> Jump to the [Setup](#install-instructions) section to to download the game, enjoy!
 > 
 > Discover [How to play](#how-to-play) and give me your [Feedback](#feedback) on this project.
 > 
@@ -11,10 +12,9 @@
 ## Table of contents
 * [Checkers mutant](#checkers-mutant)
 * [Game Charachteristics](game-charachteristics)
+* [Install Instructions](#install-instructions)
 * [How to play](#how-to-play)
-* [Setup](#setup)
 * [Collection](#collection)
-* [Project dependencies](#project-dependencies)
 * [Additional info](#additional-info)
 * [Feedback](#feedback)
 * [Copyright notice](#copyright-notice)
@@ -23,28 +23,51 @@
 Chess is the **third** learning project of my collection, a quite similar one to Checkers;
 
 This project was indeed a **mutant** of Checkers, **minor changes** were made in logic/gui to handle the **diversity** of Pieces with their **unique** movements.
+###### The project in its current state is way more featured and structured than a basic chess game
 
 # Game Charachteristics
-- Turn based
-- Multiplayer (no AI)
 - Tabletop view (2D)
+- Multiplayer (no AI)
+- Light and dark themes
+- Local and online mode
 - Distributed (client/server)
-- Socket programming (TCP)
+- Socket programming (TCP + MultiCast)
+- Three languages (English, French and Arabic)
 - Message oriented communication (except game app)
-- Supports multiple resolutions thanks to JavaFX scaling
-- Supports fullscreen mode
 - Doesn't support castling
 
+# Install instructions
+- First, you need to download the adequate version based on your OS:
+  - windows: [64 bit](./setup/chess-win64.exe?raw=true), or [32 bit](./setup/chess-win32.exe?raw=true)
+  - macOS: [10.10 or later](./setup/chess-mac.zip?raw=true)
+  - linux: [s390x](./setup/chess-linux-s390x.zip?raw=true)
+
+###### app executables created using jlink, and only tested on windows 7/10, I would appreciate if someone test it on mac/linux
+
+After downloading, extract the archive to whatever location you want.
+
+- Where to find game executable?
+  - If you have mac or linux:
+    - Navigate to the 'bin' folder inside the extracted folder
+    - You will find 'chess.bat' which is the game executable
+  - If you have windows, it's called 'launcher.bat' inside the extracted folder
+
+**WARNING**: **MAKE SURE** you allow program through firewall and run it as administrator
+
 # How to play
+
+The first time you launch the game you'll be prompted with welcome alerts, that will let you pick your preferred language and theme, and teach you some shortcuts, after that you need to choose between local and online mode to get started.
+
 ![Main app gui](./screenshots/mainApp.png)
 
-After connecting to the server, the main app gui is presented to the player, 
-allowing him to enter any username, then either Host, Join a specific room through its ID, 
-or Join public rooms.
+In the main menu, you'll need to enter a username, then either 
+- Host a room.
+- Join public/local rooms.
+- or Join a specific room through its ID (only available in online mode).
 
 ![Join app gui](./screenshots/joinApp.png)
 
-If the player chooses to play with random people, he will be presented with a list of public rooms
+In the join menu, you'll either see all (non full) rooms in local mode, or a list of public rooms in online mode.
 
 ![Room app gui](./screenshots/roomApp.png)
 
@@ -55,7 +78,7 @@ After joining a **room** the player is presented with this gui, where he can:
 - Set his **ready** status
 
 The host has in addition the ability to:
-- Change the room's **privacy** to either public/private
+- Change the room's **privacy** to either public/private (only available in online mode)
 - **Kick** someone out of the room
 - **Start** the game
 
@@ -64,11 +87,7 @@ Host privileges are **passed** automatically to the next player if the host leav
 ![Game app gui](./screenshots/gameApp.png)
 
 The game works as a regular Chess game but in a distributed environment, 
-you can end the game without leaving the room using the **Return to..** menu at the top.
-
-# Setup
-Describe how to install / setup your local environement / add link to demo version.
-Portable exe file in setup folder
+you can end the game without leaving the room using the **Game** menu on top.
 
 # Collection
 - [XO](https://github.com/BHA-Bilel/JavaFX-XO)
@@ -78,22 +97,18 @@ Portable exe file in setup folder
 - [Dominoes](https://github.com/BHA-Bilel/JavaFX-DOMINOS)
 - [Coinche](https://github.com/BHA-Bilel/JavaFX-COINCHE)
 
-# Project dependencies
-- **Java**-15.0.1
-- **JavaFX**-11.0.2
-- **controlsfx**-11.0.0
-- **jfoenix**-9.0.10
-
 # Additional info
-- This project was developed intermittently due to other preoccupations, that's why I can't tell how much time it took me to complete it.
-All the collection was initially developed in **Eclipse IDE** in late 2019, before I migrated to **Intellij IDEA** in 2021 to code the remaining parts while redesigning some parts to fit the new workflow model.
+- The game will create config files in "your_home_directory/.BG/.CHESS" to persist necessary info and your preferences updated, if you suddenly lose access to the game it may be that they became corrupted,  delete them and they'll be replaced with default ones automatically.
+- For the time being, you can only play the game locally, as the [online server](https://github.com/BHA-Bilel/BG-SERVER) isn't deployed yet, if the project get a noticeable audience (which is very unlikely) I will host the server on some cloud service, but I will need some financial support.
+- JavaFX apps can be deployed to android/ios devices so you might see some cross-platfom support in the future!
+- All the collection was initially developed in **Eclipse IDE** in late 2019, before I migrated to **Intellij IDEA** in 2021 to code the remaining parts while redesigning some parts to fit the new workflow model.
 
 - This project wasn't my first nor my last experience coding in JavaFX, I'll do my best to publish other projects on my GitHub.
 
 - **All** of the projects/repositories in my profile are produced by an **individual** effort, that I coded from **scratch**.
 
 # Feedback
-What do you think of this project? leave your thoughts/recommendations !
+What do you think of this project? leave your thoughts/recommendations!
 
 <p align="center">
   <a href="https://gist.github.com/BHA-Bilel/8b624cce0a1263299f84d59ddc05eaf9">
