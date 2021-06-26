@@ -11,7 +11,7 @@
 
 ## Table of contents
 * [Checkers mutant](#checkers-mutant)
-* [Game Charachteristics](game-charachteristics)
+* [Game Charachteristics](#game-charachteristics)
 * [Install Instructions](#install-instructions)
 * [How to play](#how-to-play)
 * [Collection](#collection)
